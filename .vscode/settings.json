@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.dbclient-js": "javascript",
+        "constantes.h": "c",
+        "menu.h": "c",
+        "assert.h": "c",
+        "affichage.h": "c",
+        "crudclients.h": "c",
+        "infoutilisateur.h": "c",
+        "client.h": "c"
+    }
+}

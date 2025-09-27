@@ -1,0 +1,10 @@
+# Fichiers objets
+*.o
+
+# L'exécutable compilé
+test
+*.exe
+
+# Fichiers temporaires
+*.log
+*.tmp
