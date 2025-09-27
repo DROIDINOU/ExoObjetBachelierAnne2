@@ -2,6 +2,7 @@
 #define MENU_H
 #include "crudClients.h"
 #include "clients.h"
+#include "console.h"
 
 typedef enum
 {
@@ -11,6 +12,6 @@ typedef enum
     AFFICHER = 3
 } ChoixMenu;
 
-void lancerMenuCrudClients(Clients *clients);
+void lancerMenuCrudClients(Clients *clients, Console *c);
 
 #endif

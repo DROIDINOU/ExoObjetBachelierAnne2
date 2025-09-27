@@ -7,9 +7,10 @@
 #include "affichage.h"
 #include "outils.h"
 #include "infoUtilisateur.h"
+#include "console.h"
 
 // Lance le menu principal
-void lancerMenuCrudClients(Clients *clients)
+void lancerMenuCrudClients(Clients *clients, Console *c)
 {
     int choix;             // choix du menu
     int numero;            // numéro client
@@ -22,7 +23,7 @@ void lancerMenuCrudClients(Clients *clients)
     {
         afficherMessageInfo(INFOCHOIXCRUD);
 
-        if (!lireEntier("Votre choix: ", &choix))
+        if (lireEntierConsole(c, &choix, "Votre choix: ") == false)
         {
             afficherMessageInfo(INFOERROR);
             continue;
@@ -39,8 +40,7 @@ void lancerMenuCrudClients(Clients *clients)
                 ok = false;
 
             // Numéro
-            if (ok && !saisirEntier("Veuillez entrer le numero de client: ",
-                                    &numero, INFONUMEROINVALIDE))
+            if (ok && !saisirEntierConsole(c, &numero, "Veuillez entrer le numero de client: ", INFONUMEROINVALIDE))
                 ok = false;
 
             // Vérifier si ce numéro existe déjà
@@ -48,9 +48,7 @@ void lancerMenuCrudClients(Clients *clients)
                 ok = false;
 
             // Nom / prénom / adresse
-            if (ok && !saisirNomPrenomAdresse(nom, sizeof nom,
-                                              prenom, sizeof prenom,
-                                              adresse, sizeof adresse))
+            if (ok && !saisirNomPrenomAdresseConsole(c, nom, sizeof(nom), prenom, sizeof(prenom), adresse, sizeof(adresse)))
                 ok = false;
 
             // Ajout final
@@ -61,8 +59,7 @@ void lancerMenuCrudClients(Clients *clients)
 
         case SUPPRIMER:
         {
-            bool ok = saisirEntier("Numero à supprimer: ",
-                                   &numero, INFONUMEROINVALIDE);
+            bool ok = saisirEntierConsole(c, &numero, "Numero à supprimer: ", INFONUMEROINVALIDE);
 
             if (ok && supprimer(clients, numero))
                 afficherMessageInfo(INFOSUCCESSSUPPRESSION);

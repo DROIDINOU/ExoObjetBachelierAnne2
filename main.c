@@ -2,7 +2,8 @@
 #include "menu.h"
 #include "crudClients.h"
 #include "client.h"
-#include "clients.h"
+#include "console.h"
+#
 
 // TODO ENCAPSULATION ET ABSTRACTION
 // TODO Exercice réalisé en programmation procédurale,
@@ -15,8 +16,10 @@
 int main(void)
 {
     Clients clients;
+    Console c;
     // Initialisation propre
     initClients(&clients);
-    lancerMenuCrudClients(&clients);
+    initConsole(&c);
+    lancerMenuCrudClients(&clients, &c);
     return 0;
 }
