@@ -1,7 +1,8 @@
 #include <string.h>
 #include "client.h"      // contient les prototypes des getters/setters + initClient
 #include "crudClients.h" // contient Clients + prototypes du CRUD
-#include "affichage.h"
+#include "infoUtilisateur.h"
+#include "console.h"
 
 /*======================================================================
   Fonctions privées
@@ -40,7 +41,7 @@ bool estPlein(const Clients *clients)
 {
     if (clients->countUsed >= MAXCLIENTS)
     {
-        afficherMessageInfo(INFOERREURLISTINGPLEIN);
+        afficherMessageConsole(NULL, INFOERREURLISTINGPLEIN);
         return true;
     }
     return false;
@@ -50,7 +51,8 @@ bool numeroExiste(const Clients *clients, int numero)
 {
     if (trouverIndex(clients, numero) != -1)
     {
-        afficherMessageInfo(INFONUMEROEXIST);
+        afficherMessageConsole(NULL, INFONUMEROEXIST);
+
         return true;
     }
     return false;
@@ -61,7 +63,7 @@ bool numeroExiste(const Clients *clients, int numero)
  ======================================================================*/
 
 bool ajouter(Clients *clients, int numero,
-             const char *nom, const char *prenom, const char *adresse)
+             const char *nom, const char *prenom, const char *adresse, Frequentation frequentation)
 {
     int idx = trouverEspaceLibre(clients);
     if (idx == -1)
@@ -70,7 +72,7 @@ bool ajouter(Clients *clients, int numero,
     }
 
     // Initialiser le client avec les setters
-    initClient(&clients->tabClients[idx], numero, nom, prenom, adresse);
+    initClient(&clients->tabClients[idx], numero, nom, prenom, adresse, frequentation);
 
     clients->countUsed++;
     return true;
@@ -81,7 +83,8 @@ bool supprimer(Clients *clients, int numero)
     int idx = trouverIndex(clients, numero);
     if (idx == -1)
     {
-        afficherMessageInfo(INFOERRORSUPPRESSION);
+        afficherMessageConsole(NULL, INFOERRORSUPPRESSION);
+
         return false;
     }
 

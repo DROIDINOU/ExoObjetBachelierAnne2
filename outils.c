@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include "crudClients.h"
 #include "outils.h"
-#include "affichage.h"
 #include "console.h"
 
 /*_____________________________________________________
@@ -28,4 +27,19 @@ int viderBuffer(void)
     int c;
     while ((c = getchar()) != '\n' && c != EOF)
         ; // on jette le reste
+}
+
+const char *frequentationToString(Frequentation f)
+{
+    switch (f)
+    {
+    case TRESREGULIER:
+        return "Très régulier";
+    case REGULIER:
+        return "Régulier";
+    case OCCASIONNEL:
+        return "Occasionnel";
+    default:
+        return "Inconnu";
+    }
 }

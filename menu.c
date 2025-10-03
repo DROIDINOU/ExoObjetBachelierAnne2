@@ -4,33 +4,40 @@
 #include "constantes.h"
 #include "crudClients.h"
 #include "menu.h"
-#include "affichage.h"
 #include "outils.h"
 #include "infoUtilisateur.h"
 #include "console.h"
 
 // Lance le menu principal
-void lancerMenuCrudClients(Clients *clients, Console *c)
+void lancerMenuCrudClients(Clients *clients, Console *c, Clients *clientsTries)
 {
-    int choix;             // choix du menu
-    int numero;            // numéro client
-    char nom[256];         // buffer pour nom
-    char prenom[256];      // buffer pour prénom
-    char adresse[256];     // buffer pour adresse
-    bool continuer = true; // pour lancer ou stopper la boucle principale
+    int choix;                   // choix du menu
+    int numero;                  // numéro client
+    char nom[256];               // buffer pour nom
+    char prenom[256];            // buffer pour prénom
+    char adresse[256];           // buffer pour adresse
+    bool continuer = true;       // boucle principale
+    Frequentation frequentation; // variable pour la fréquentation
 
     do
     {
-        afficherMessageInfo(INFOCHOIXCRUD);
+        afficherMessageConsole(NULL, INFOCHOIXCRUD);
 
         if (lireEntierConsole(c, &choix, "Votre choix: ") == false)
         {
-            afficherMessageInfo(INFOERROR);
+            afficherMessageConsole(NULL, INFOERROR);
             continue;
         }
 
         switch (choix)
         {
+
+        case TRIER:
+        {
+            lancerMenuTrierClientsParFrequentation(clients, c, clientsTries);
+        }
+        break;
+
         case AJOUTER:
         {
             bool ok = true;
@@ -48,12 +55,18 @@ void lancerMenuCrudClients(Clients *clients, Console *c)
                 ok = false;
 
             // Nom / prénom / adresse
-            if (ok && !saisirNomPrenomAdresseConsole(c, nom, sizeof(nom), prenom, sizeof(prenom), adresse, sizeof(adresse)))
+            if (ok && !saisirInfosCrud(
+                          c,
+                          nom, sizeof(nom),
+                          prenom, sizeof(prenom),
+                          adresse, sizeof(adresse),
+                          &frequentation)) // ✅ adresse de ta variable Frequentation
+            {
                 ok = false;
+            }
 
-            // Ajout final
-            if (ok && ajouter(clients, numero, nom, prenom, adresse))
-                afficherMessageInfo(INFOSUCCESAJOUT);
+            if (ok && ajouter(clients, numero, nom, prenom, adresse, frequentation))
+                afficherMessageConsole(NULL, INFOSUCCESAJOUT);
         }
         break;
 
@@ -62,23 +75,65 @@ void lancerMenuCrudClients(Clients *clients, Console *c)
             bool ok = saisirEntierConsole(c, &numero, "Numero à supprimer: ", INFONUMEROINVALIDE);
 
             if (ok && supprimer(clients, numero))
-                afficherMessageInfo(INFOSUCCESSSUPPRESSION);
+                afficherMessageConsole(NULL, INFOSUCCESSSUPPRESSION);
         }
         break;
 
         case AFFICHER:
-            afficherClients(clients);
+            afficherClientsConsole(NULL, clients);
             break;
 
         case QUITTER:
-            afficherMessageInfo(INFOAUREVOIR);
+            afficherMessageConsole(NULL, INFOAUREVOIR);
+
             continuer = false;
             break;
 
         default:
-            afficherMessageInfo(INFOERRORCHOIXINEXISTANT);
+            afficherMessageConsole(NULL, INFOERRORCHOIXINEXISTANT);
+
             break;
         }
 
     } while (continuer && choix != QUITTER);
+}
+
+// lancer menu triage par frequentation
+void lancerMenuTrierClientsParFrequentation(Clients *clients, Console *c, Clients *clientsTries)
+{
+    bool ok = true;
+    int choixTri; // choix du tri
+    do
+    {
+        afficherMessageConsole(NULL, INFOCHOIXTRIAGE);
+        if (lireEntierConsole(c, &choixTri, "Votre choix: ") == false)
+        {
+            afficherMessageConsole(NULL, INFOERROR);
+            continue;
+        }
+        switch (choixTri)
+        {
+        case 1: // Très régulier
+            trierClientsParFrequentation(clients, clientsTries, choixTri);
+            afficherClientsConsole(NULL, clientsTries);
+            ok = false;
+            break;
+        case 2: // Régulier
+            trierClientsParFrequentation(clients, clientsTries, choixTri);
+            afficherClientsConsole(NULL, clientsTries);
+
+            ok = false;
+            break;
+        case 3: // Occasionnel
+            trierClientsParFrequentation(clients, clientsTries, choixTri);
+            afficherClientsConsole(NULL, clientsTries);
+
+            ok = false;
+            break;
+        default:
+            afficherMessageConsole(NULL, INFOERRORCHOIXINEXISTANT);
+            break;
+        }
+
+    } while (ok);
 }

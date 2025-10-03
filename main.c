@@ -1,25 +1,22 @@
 /*Fichier d'en-tête*/
 #include "menu.h"
-#include "crudClients.h"
-#include "client.h"
+#include "clients.h"
 #include "console.h"
-#
-
-// TODO ENCAPSULATION ET ABSTRACTION
-// TODO Exercice réalisé en programmation procédurale,
-// TODO avec un tableau statique de clients (MAXCLIENTS = 20).
-// TODO NB : Plus tard, avec malloc/free et l'encapsulation,
-// TODO on pourrait améliorer la modularité en cachant la structure
-// TODO Clients dans crudClients.c et fournir uniquement une interface (getters/setters).
-// TODO Mais ici, one garde la structure client publique.
 
 int main(void)
 {
+    // declaration
     Clients clients;
     Console c;
-    // Initialisation propre
+    Clients clientsTries;
+    // initialisation
     initClients(&clients);
+    initClients(&clientsTries);
     initConsole(&c);
-    lancerMenuCrudClients(&clients, &c);
+    // Actions
+    lancerMenuCrudClients(&clients, &c, &clientsTries);
+    // destruction
+    destroyClients(&clients);
+    destroyClients(&clientsTries);
     return 0;
 }

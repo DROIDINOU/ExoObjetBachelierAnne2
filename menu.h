@@ -9,9 +9,11 @@ typedef enum
     QUITTER = 0,
     AJOUTER = 1,
     SUPPRIMER = 2,
-    AFFICHER = 3
+    AFFICHER = 3,
+    TRIER = 4
 } ChoixMenu;
 
-void lancerMenuCrudClients(Clients *clients, Console *c);
+void lancerMenuCrudClients(Clients *clients, Console *c, Clients *clientsTries);
+void lancerMenuTrierClientsParFrequentation(Clients *clients, Console *c, Clients *clientsTries);
 
 #endif

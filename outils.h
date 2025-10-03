@@ -12,5 +12,5 @@ ______________________________________________________*/
 
 int supprimerSautLigne(char *s);
 int viderBuffer(void);
-
+const char *frequentationToString(Frequentation f);
 #endif

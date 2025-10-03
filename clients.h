@@ -7,15 +7,14 @@
 ================================*/
 typedef struct
 {
-    Client tabClients[MAXCLIENTS];
-    int countUsed;
+  Client tabClients[MAXCLIENTS];
+  int countUsed;
 } Clients;
 
 /*===============================
   Prototypes
 ================================*/
 void initClients(Clients *clients);
-bool clientDansClientEstUtilise(const Clients *clients, int index);
 void destroyClients(Clients *clients);
-
+void trierClientsParFrequentation(const Clients *clients, Clients *clientsTries, Frequentation frequentation);
 #endif

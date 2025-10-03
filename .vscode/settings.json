@@ -7,6 +7,7 @@
         "affichage.h": "c",
         "crudclients.h": "c",
         "infoutilisateur.h": "c",
-        "client.h": "c"
+        "client.h": "c",
+        "console.h": "c"
     }
 }
