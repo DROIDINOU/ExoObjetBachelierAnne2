@@ -6,9 +6,9 @@
 /*===============================*/
 
 void initClient(Client *client, int numero,
-                const char *nom,
-                const char *prenom,
-                const char *adresse,
+                char *nom,
+                char *prenom,
+                char *adresse,
                 Frequentation frequentation)
 {
     setNumero(client, numero);
@@ -40,19 +40,19 @@ void setNumero(Client *client, int numero)
     client->numero = numero;
 }
 
-void setNom(Client *client, const char *nom)
+void setNom(Client *client, char *nom)
 {
     strncpy(client->nom, nom, NOMTAILLE);
     client->nom[NOMTAILLE] = '\0'; // sécurité
 }
 
-void setPrenom(Client *client, const char *prenom)
+void setPrenom(Client *client, char *prenom)
 {
     strncpy(client->prenom, prenom, PRENOMTAILLE);
     client->prenom[PRENOMTAILLE] = '\0';
 }
 
-void setAdresse(Client *client, const char *adresse)
+void setAdresse(Client *client, char *adresse)
 {
     strncpy(client->adresse, adresse, ADRESSETAILLE);
     client->adresse[ADRESSETAILLE] = '\0';
@@ -71,32 +71,32 @@ void setFrequentation(Client *client, Frequentation frequentation)
 /*===============================
   Getters
 ================================*/
-int getNumero(const Client *client)
+int getNumero(Client *client)
 {
     return client->numero;
 }
 
-const char *getNom(const Client *client)
+char *getNom(Client *client)
 {
     return client->nom;
 }
 
-const char *getPrenom(const Client *client)
+char *getPrenom(Client *client)
 {
     return client->prenom;
 }
 
-const char *getAdresse(const Client *client)
+char *getAdresse(Client *client)
 {
     return client->adresse;
 }
 
-Frequentation getFrequentation(const Client *client)
+Frequentation getFrequentation(Client *client)
 {
     return client->frequentation;
 }
 
-bool isUsed(const Client *client)
+bool isUsedClient(Client *client)
 {
     return client->used;
 }

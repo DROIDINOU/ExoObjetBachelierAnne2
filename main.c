@@ -16,7 +16,7 @@ int main(void)
     // Actions
     lancerMenuCrudClients(&clients, &c, &clientsTries);
     // destruction
-    destroyClients(&clients);
-    destroyClients(&clientsTries);
+    detruireClients(&clients);
+    detruireClients(&clientsTries);
     return 0;
 }

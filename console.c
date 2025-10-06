@@ -7,7 +7,7 @@
 // initialisation console vide
 void initConsole(Console *c)
 {
-    c->_dummy = 0; // initialise le champ factice
+    c->_vide = 0;
     // (void)c; pourrait aussi faire l'affaire
 }
 
@@ -15,7 +15,7 @@ void initConsole(Console *c)
 # Sous fonctions  de saisirEntierConsole et saisirchaineConsole
 -----------------------------------------------------------------/*/
 
-bool lireEntierConsole(Console *c, int *valeur, const char *invite)
+bool lireEntierConsole(Console *c, int *valeur, char *invite)
 {
     (void)c;
     char ligne[32];
@@ -32,7 +32,7 @@ bool lireEntierConsole(Console *c, int *valeur, const char *invite)
     return sscanf(ligne, "%d", valeur) == 1;
 }
 
-bool lireChaineConsole(Console *c, char *buffer, size_t taille, const char *invite)
+bool lireChaineConsole(Console *c, char *buffer, size_t taille, char *invite)
 {
     (void)c;
     if (invite && invite[0] != '\0')
@@ -45,7 +45,7 @@ bool lireChaineConsole(Console *c, char *buffer, size_t taille, const char *invi
         viderBuffer();
 
     supprimerSautLigne(buffer);
-    return buffer[0] != '\0'; // on refuse une chaîne vide
+    return buffer[0] != '\0';
 }
 
 /*---------------------------------------------------------------
@@ -53,7 +53,7 @@ bool lireChaineConsole(Console *c, char *buffer, size_t taille, const char *invi
 # Sous fonctions de saisirInfosCrud
 -----------------------------------------------------------------/*/
 // saisie entier
-bool saisirEntierConsole(Console *c, int *valeur, const char *invite, Info messageErreur)
+bool saisirEntierConsole(Console *c, int *valeur, char *invite, Info messageErreur)
 {
     if (!lireEntierConsole(c, valeur, invite))
     {
@@ -63,7 +63,7 @@ bool saisirEntierConsole(Console *c, int *valeur, const char *invite, Info messa
     return true;
 }
 // saisir chaine
-bool saisirChaineConsole(Console *c, char *buffer, size_t taille, const char *invite, Info messageErreur)
+bool saisirChaineConsole(Console *c, char *buffer, size_t taille, char *invite, Info messageErreur)
 {
     if (!lireChaineConsole(c, buffer, taille, invite))
     {
@@ -75,52 +75,15 @@ bool saisirChaineConsole(Console *c, char *buffer, size_t taille, const char *in
 
 /*_________________________________________________________________
 # FONCTIONS PRICIPALES
-# Saisie des infos nécessaires pour le crud
 # affichage messages utilisateurs
 # affichage liste des clients
 # affichage tri
 __________________________________________________________________/*/
-bool saisirInfosCrud(Console *c,
-                     char *nom, size_t nomSize,
-                     char *prenom, size_t prenomSize,
-                     char *adresse, size_t adresseSize,
-                     Frequentation *frequentation)
-{
-
-    if (!saisirChaineConsole(c, nom, nomSize,
-                             "Nom: ", INFONOMINVALIDE))
-        return false;
-
-    if (!saisirChaineConsole(c, prenom, prenomSize,
-                             "Prénom: ", INFOPRENOMINVALIDE))
-        return false;
-
-    if (!saisirChaineConsole(c, adresse, adresseSize,
-                             "Adresse: ", INFOADRESSEINVALIDE))
-        return false;
-
-    int choix;
-    if (!saisirEntierConsole(c, &choix,
-                             "Fréquentation (1=Très régulier, 2=Régulier, 3=Occasionnel): ",
-                             INFOFREQUENTATIONINVALIDE))
-    {
-        return false;
-    }
-
-    if (choix < 1 || choix > 3)
-    {
-        afficherMessageConsole(c, INFOFREQUENTATIONINVALIDE);
-        return false;
-    }
-
-    *frequentation = (Frequentation)choix;
-    return true;
-}
 
 /*======================================================================
   Affichage des messages d info / erreurs
  ======================================================================*/
-void afficherMessageConsole(Console *c, const Info info)
+void afficherMessageConsole(Console *c, Info info)
 
 {
     (void)c;
@@ -185,66 +148,4 @@ void afficherMessageConsole(Console *c, const Info info)
         printf("❓ Message inconnu.\n");
         break;
     }
-}
-
-/*======================================================================
-  Affichage liste client : afficherClientsConsole
-  Affichage liste triée: afficherClientsTries
- ======================================================================*/
-void afficherClientsConsole(Console *c, const Clients *clients)
-{
-    (void)c; // Console pas encore utilisée
-    printf("\n----------- Listing clients -----------\n");
-    printf("# Id | Prénom | Nom | Adresse | Fréquentation\n");
-    printf("-------------------------------------------\n");
-
-    for (int i = 0; i < MAXCLIENTS; ++i)
-    {
-        const Client *cli = &clients->tabClients[i];
-        if (isUsed(cli))
-        {
-            printf("# %d | %s | %s | %s | %s\n",
-                   getNumero(cli),
-                   getPrenom(cli),
-                   getNom(cli),
-                   getAdresse(cli),
-                   frequentationToString(getFrequentation(cli)));
-        }
-    }
-
-    printf("*****************************\n");
-    if (clients->countUsed == 0)
-        printf("Aucun client.\n");
-    else
-        printf("Total: %d client(s).\n", clients->countUsed);
-    printf("*****************************\n");
-}
-
-void afficherClientsTries(Console *c, const Clients *clientsTries, Frequentation frequentation)
-{
-    (void)c; // Console pas encore utilisée
-    printf("\n----------- Listing clients triés -----------\n");
-    printf("# Id | Prénom | Nom | Adresse | Fréquentation\n");
-    printf("-------------------------------------------\n");
-
-    for (int i = 0; i < MAXCLIENTS; ++i)
-    {
-        const Client *cli = &clientsTries->tabClients[i];
-        if (isUsed(cli) && getFrequentation(cli) == frequentation)
-        {
-            printf("# %d | %s | %s | %s | %s\n",
-                   getNumero(cli),
-                   getPrenom(cli),
-                   getNom(cli),
-                   getAdresse(cli),
-                   frequentationToString(getFrequentation(cli)));
-        }
-    }
-
-    printf("*****************************\n");
-    if (clientsTries->countUsed == 0)
-        printf("Aucun client.\n");
-    else
-        printf("Total: %d client(s).\n", clientsTries->countUsed);
-    printf("*****************************\n");
 }

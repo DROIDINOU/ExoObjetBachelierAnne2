@@ -1,69 +1,17 @@
 #include <string.h>
+#include <stdio.h>
 #include "client.h"      // contient les prototypes des getters/setters + initClient
 #include "crudClients.h" // contient Clients + prototypes du CRUD
-#include "infoUtilisateur.h"
 #include "console.h"
-
-/*======================================================================
-  Fonctions privées
- ======================================================================*/
-
-// Cherche une case libre dans le tableau
-static int trouverEspaceLibre(const Clients *clients)
-{
-    for (int i = 0; i < MAXCLIENTS; ++i)
-    {
-        if (!isUsed(&clients->tabClients[i])) // utilisation du getter
-            return i;
-    }
-    return -1;
-}
-
-// Trouve un client par son numéro
-static int trouverIndex(const Clients *clients, int numero)
-{
-    for (int i = 0; i < MAXCLIENTS; ++i)
-    {
-        if (isUsed(&clients->tabClients[i]) &&
-            getNumero(&clients->tabClients[i]) == numero) // getters
-        {
-            return i;
-        }
-    }
-    return -1;
-}
-
-/*======================================================================
-  Fonctions de vérification
- ======================================================================*/
-
-bool estPlein(const Clients *clients)
-{
-    if (clients->countUsed >= MAXCLIENTS)
-    {
-        afficherMessageConsole(NULL, INFOERREURLISTINGPLEIN);
-        return true;
-    }
-    return false;
-}
-
-bool numeroExiste(const Clients *clients, int numero)
-{
-    if (trouverIndex(clients, numero) != -1)
-    {
-        afficherMessageConsole(NULL, INFONUMEROEXIST);
-
-        return true;
-    }
-    return false;
-}
+#include "outils.h"
 
 /*======================================================================
   Fonctions CRUD
  ======================================================================*/
 
 bool ajouter(Clients *clients, int numero,
-             const char *nom, const char *prenom, const char *adresse, Frequentation frequentation)
+             char *nom, char *prenom, char *adresse,
+             Frequentation frequentation)
 {
     int idx = trouverEspaceLibre(clients);
     if (idx == -1)
@@ -71,10 +19,14 @@ bool ajouter(Clients *clients, int numero,
         return false; // pas de case libre
     }
 
-    // Initialiser le client avec les setters
-    initClient(&clients->tabClients[idx], numero, nom, prenom, adresse, frequentation);
+    Client *cli = getClientAt(clients, idx);
+    if (cli == NULL)
+        return false; // sécurité
 
-    clients->countUsed++;
+    // Initialiser le client avec les setters
+    initClient(cli, numero, nom, prenom, adresse, frequentation);
+
+    incrementCountUsed(clients);
     return true;
 }
 
@@ -84,11 +36,109 @@ bool supprimer(Clients *clients, int numero)
     if (idx == -1)
     {
         afficherMessageConsole(NULL, INFOERRORSUPPRESSION);
-
         return false;
     }
 
-    setUsed(&clients->tabClients[idx], false); // setter au lieu de .used = false
-    clients->countUsed--;
+    Client *cli = getClientAt(clients, idx);
+    if (cli != NULL)
+    {
+        setUsed(cli, false);
+        decrementCountUsed(clients);
+    }
     return true;
+}
+
+bool saisirInfosCrud(Console *c,
+                     char *nom, size_t nomSize,
+                     char *prenom, size_t prenomSize,
+                     char *adresse, size_t adresseSize,
+                     Frequentation *frequentation)
+{
+
+    if (!saisirChaineConsole(c, nom, nomSize,
+                             "Nom: ", INFONOMINVALIDE))
+        return false;
+
+    if (!saisirChaineConsole(c, prenom, prenomSize,
+                             "Prénom: ", INFOPRENOMINVALIDE))
+        return false;
+
+    if (!saisirChaineConsole(c, adresse, adresseSize,
+                             "Adresse: ", INFOADRESSEINVALIDE))
+        return false;
+
+    int choix;
+    if (!saisirEntierConsole(c, &choix,
+                             "Fréquentation (1=Très régulier, 2=Régulier, 3=Occasionnel): ",
+                             INFOFREQUENTATIONINVALIDE))
+    {
+        return false;
+    }
+
+    if (choix < 1 || choix > 3)
+    {
+        afficherMessageConsole(c, INFOFREQUENTATIONINVALIDE);
+        return false;
+    }
+
+    *frequentation = (Frequentation)choix;
+    return true;
+}
+
+void afficherClientsConsole(Console *c, Clients *clients)
+{
+    (void)c; // Console pas encore utilisée
+    printf("\n----------- Listing clients -----------\n");
+    printf("# Id | Prénom | Nom | Adresse | Fréquentation\n");
+    printf("-------------------------------------------\n");
+
+    for (int i = 0; i < MAXCLIENTS; ++i)
+    {
+        Client *cli = getClientAt(clients, i);
+        if (isUsedClient(cli))
+        {
+            printf("# %d | %s | %s | %s | %s\n",
+                   getNumero(cli),
+                   getPrenom(cli),
+                   getNom(cli),
+                   getAdresse(cli),
+                   frequentationVersChaine(getFrequentation(cli)));
+        }
+    }
+
+    printf("*****************************\n");
+    if (getCountUsed(clients) == 0)
+        printf("Aucun client.\n");
+    else
+        printf("Total: %d client(s).\n", getCountUsed(clients));
+    printf("*****************************\n");
+}
+
+void afficherClientsTries(Console *c, Clients *clientsTries, Frequentation frequentation)
+{
+    (void)c; // Console pas encore utilisée
+    printf("\n----------- Listing clients triés -----------\n");
+    printf("# Id | Prénom | Nom | Adresse | Fréquentation\n");
+    printf("-------------------------------------------\n");
+
+    for (int i = 0; i < MAXCLIENTS; ++i)
+    {
+        Client *cli = getClientAt(clientsTries, i);
+        if (isUsedClient(cli) && getFrequentation(cli) == frequentation)
+        {
+            printf("# %d | %s | %s | %s | %s\n",
+                   getNumero(cli),
+                   getPrenom(cli),
+                   getNom(cli),
+                   getAdresse(cli),
+                   frequentationVersChaine(getFrequentation(cli)));
+        }
+    }
+
+    printf("*****************************\n");
+    if (getCountUsed(clientsTries) == 0)
+        printf("Aucun client.\n");
+    else
+        printf("Total: %d client(s).\n", getCountUsed(clientsTries));
+    printf("*****************************\n");
 }

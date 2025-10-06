@@ -15,6 +15,15 @@ typedef struct
   Prototypes
 ================================*/
 void initClients(Clients *clients);
-void destroyClients(Clients *clients);
-void trierClientsParFrequentation(const Clients *clients, Clients *clientsTries, Frequentation frequentation);
+void detruireClients(Clients *clients);
+int getCountUsed(Clients *clients);
+Client *getClientAt(Clients *clients, int index);
+void incrementCountUsed(Clients *clients);
+void decrementCountUsed(Clients *clients);
+void trierClientsParFrequentation(Clients *clients, Clients *clientsTries, Frequentation frequentation);
+int trouverEspaceLibre(Clients *clients);
+int trouverIndex(Clients *clients, int numero);
+bool estPlein(Clients *clients);
+bool numeroExiste(Clients *clients, int numero);
+
 #endif

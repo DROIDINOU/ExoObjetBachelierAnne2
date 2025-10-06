@@ -8,6 +8,7 @@
         "crudclients.h": "c",
         "infoutilisateur.h": "c",
         "client.h": "c",
-        "console.h": "c"
+        "console.h": "c",
+        "stdlib.h": "c"
     }
 }

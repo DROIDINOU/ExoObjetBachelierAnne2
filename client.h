@@ -29,9 +29,9 @@ typedef struct
   Initialisation & Reset
 ================================*/
 void initClient(Client *client, int numero,
-                const char *nom,
-                const char *prenom,
-                const char *adresse,
+                char *nom,
+                char *prenom,
+                char *adresse,
                 Frequentation frequentation);
 
 void resetClient(Client *client);
@@ -40,20 +40,20 @@ void resetClient(Client *client);
   Setters
 ================================*/
 void setNumero(Client *client, int numero);
-void setNom(Client *client, const char *nom);
-void setPrenom(Client *client, const char *prenom);
-void setAdresse(Client *client, const char *adresse);
+void setNom(Client *client, char *nom);
+void setPrenom(Client *client, char *prenom);
+void setAdresse(Client *client, char *adresse);
 void setUsed(Client *client, bool used);
 void setFrequentation(Client *client, Frequentation frequentation);
 
 /*===============================
   Getters
 ================================*/
-int getNumero(const Client *client);
-const char *getNom(const Client *client);
-const char *getPrenom(const Client *client);
-const char *getAdresse(const Client *client);
-bool isUsed(const Client *client);
-Frequentation getFrequentation(const Client *client);
+int getNumero(Client *client);
+char *getNom(Client *client);
+char *getPrenom(Client *client);
+char *getAdresse(Client *client);
+bool isUsedClient(Client *client);
+Frequentation getFrequentation(Client *client);
 
 #endif

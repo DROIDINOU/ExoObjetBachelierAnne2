@@ -7,10 +7,9 @@
 
 /*_____________________________________________________
 #         Fonctions utilitaires
-#   suppression du saut de ligne, lecture chaîne et entier
+#   suppression du saut de ligne
 #   vider buffer
-#   lireChaine, lireEntier
-#   saisirChaine, saisirEntier
+#   convertir struct en chaine
 ______________________________________________________*/
 
 // Supprime le \n final de fgets et remplace par \0
@@ -29,7 +28,7 @@ int viderBuffer(void)
         ; // on jette le reste
 }
 
-const char *frequentationToString(Frequentation f)
+char *frequentationVersChaine(Frequentation f)
 {
     switch (f)
     {

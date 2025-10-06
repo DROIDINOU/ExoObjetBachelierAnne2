@@ -5,11 +5,17 @@
 #include "constantes.h"
 #include "client.h"
 #include "clients.h"
+#include "console.h"
 
-bool estPlein(const Clients *clients);
-bool numeroExiste(const Clients *clients, int numero);
-bool ajouter(Clients *clients, int numero, const char *nom,
-             const char *prenom, const char *adresse, Frequentation frequentation);
+bool ajouter(Clients *clients, int numero, char *nom,
+             char *prenom, char *adresse, Frequentation frequentation);
 bool supprimer(Clients *clients, int numero);
+bool saisirInfosCrud(Console *c,
+                     char *nom, size_t nomSize,
+                     char *prenom, size_t prenomSize,
+                     char *adresse, size_t adresseSize,
+                     Frequentation *frequentation);
+void afficherClientsConsole(Console *c, Clients *clients);
+void afficherClientsTries(Console *c, Clients *clientsTries, Frequentation frequentation);
 
 #endif

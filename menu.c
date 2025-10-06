@@ -5,7 +5,6 @@
 #include "crudClients.h"
 #include "menu.h"
 #include "outils.h"
-#include "infoUtilisateur.h"
 #include "console.h"
 
 // Lance le menu principal
@@ -44,7 +43,10 @@ void lancerMenuCrudClients(Clients *clients, Console *c, Clients *clientsTries)
 
             // Vérifier si la liste est pleine
             if (estPlein(clients))
+            {
+                afficherMessageConsole(NULL, INFOERREURLISTINGPLEIN);
                 ok = false;
+            }
 
             // Numéro
             if (ok && !saisirEntierConsole(c, &numero, "Veuillez entrer le numero de client: ", INFONUMEROINVALIDE))
@@ -52,7 +54,10 @@ void lancerMenuCrudClients(Clients *clients, Console *c, Clients *clientsTries)
 
             // Vérifier si ce numéro existe déjà
             if (ok && numeroExiste(clients, numero))
+            {
+                afficherMessageConsole(NULL, INFONUMEROEXIST);
                 ok = false;
+            }
 
             // Nom / prénom / adresse
             if (ok && !saisirInfosCrud(
@@ -60,7 +65,7 @@ void lancerMenuCrudClients(Clients *clients, Console *c, Clients *clientsTries)
                           nom, sizeof(nom),
                           prenom, sizeof(prenom),
                           adresse, sizeof(adresse),
-                          &frequentation)) // ✅ adresse de ta variable Frequentation
+                          &frequentation))
             {
                 ok = false;
             }
