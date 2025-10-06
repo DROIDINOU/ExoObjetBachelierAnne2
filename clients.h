@@ -20,7 +20,6 @@ int getCountUsed(Clients *clients);
 Client *getClientAt(Clients *clients, int index);
 void incrementCountUsed(Clients *clients);
 void decrementCountUsed(Clients *clients);
-void trierClientsParFrequentation(Clients *clients, Clients *clientsTries, Frequentation frequentation);
 int trouverEspaceLibre(Clients *clients);
 int trouverIndex(Clients *clients, int numero);
 bool estPlein(Clients *clients);

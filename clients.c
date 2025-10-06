@@ -104,25 +104,3 @@ bool numeroExiste(Clients *clients, int numero)
     }
     return false;
 }
-
-/*======================================================================
-  Triage de la liste de Clients
- ======================================================================*/
-void trierClientsParFrequentation(Clients *clients,
-                                  Clients *clientsTries,
-                                  Frequentation frequentation)
-{
-    clientsTries->countUsed = 0; // on part d'une collection vide
-
-    for (int i = 0; i < MAXCLIENTS; i++)
-    {
-        Client *cli = &clients->tabClients[i];
-
-        if (isUsedClient(cli) && getFrequentation(cli) == frequentation)
-        {
-            // copier dans la collection triée à la prochaine position
-            clientsTries->tabClients[clientsTries->countUsed] = *cli;
-            clientsTries->countUsed++;
-        }
-    }
-}

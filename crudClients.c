@@ -142,3 +142,25 @@ void afficherClientsTries(Console *c, Clients *clientsTries, Frequentation frequ
         printf("Total: %d client(s).\n", getCountUsed(clientsTries));
     printf("*****************************\n");
 }
+
+/*======================================================================
+  Triage de la liste de Clients
+ ======================================================================*/
+void trierClientsParFrequentation(Clients *clients,
+                                  Clients *clientsTries,
+                                  Frequentation frequentation)
+{
+    clientsTries->countUsed = 0; // on part d'une collection vide
+
+    for (int i = 0; i < MAXCLIENTS; i++)
+    {
+        Client *cli = &clients->tabClients[i];
+
+        if (isUsedClient(cli) && getFrequentation(cli) == frequentation)
+        {
+            // copier dans la collection triée à la prochaine position
+            clientsTries->tabClients[clientsTries->countUsed] = *cli;
+            clientsTries->countUsed++;
+        }
+    }
+}

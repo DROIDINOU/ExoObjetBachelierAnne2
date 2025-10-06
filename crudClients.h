@@ -17,5 +17,6 @@ bool saisirInfosCrud(Console *c,
                      Frequentation *frequentation);
 void afficherClientsConsole(Console *c, Clients *clients);
 void afficherClientsTries(Console *c, Clients *clientsTries, Frequentation frequentation);
+void trierClientsParFrequentation(Clients *clients, Clients *clientsTries, Frequentation frequentation);
 
 #endif
